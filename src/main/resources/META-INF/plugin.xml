@@ -40,13 +40,13 @@
         <psi.referenceContributor
                 language="PHP"
                 implementation="com.luminarixlabs.tempest.goto.ViewReferenceContributor"/>
-        
+
         <!-- Go-to-view-component -->
         <psi.referenceContributor
                 language="HTML"
                 implementation="com.luminarixlabs.tempest.goto.ViewComponentReferenceContributor"/>
 
-        <!-- Web Types for custom HTML attributes -->
+        <!-- Web Types for custom HTML elements and attributes -->
         <webSymbols.webTypes
                 source="web-types/tempest.web-types.json"
                 enableByDefault="true"/>

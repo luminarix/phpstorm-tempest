@@ -5,6 +5,148 @@
   "description-markup": "markdown",
   "contributions": {
     "html": {
+      "elements": [
+        {
+          "name": "x-slot",
+          "description": "A default Tempest component. Possible attributes: `name`.",
+          "attributes": [
+            {
+              "name": "name",
+              "description": "The name of the slot.",
+              "value": {
+                "type": "string",
+                "required": false
+              }
+            }
+          ]
+        },
+        {
+          "name": "x-form",
+          "description": "A default Tempest component. Possible attributes: `action`, `method`, `enctype`.",
+          "attributes": [
+            {
+              "name": "action",
+              "description": "The action URL for the form.",
+              "value": {
+                "type": "string",
+                "required": false
+              }
+            },
+            {
+              "name": "method",
+              "description": "The HTTP method for the form. Defaults to 'POST'.",
+              "value": {
+                "type": "string",
+                "required": false
+              }
+            },
+            {
+              "name": "enctype",
+              "description": "The encoding type for the form.",
+              "value": {
+                "type": "string",
+                "required": false
+              }
+            }
+          ]
+        },
+        {
+          "name": "x-submit",
+          "description": "A default Tempest component. Possible attributes: `label`.",
+          "attributes": [
+            {
+              "name": "label",
+              "description": "The label for the submit button. Defaults to 'Submit'.",
+              "value": {
+                "type": "string",
+                "required": false
+              }
+            }
+          ]
+        },
+        {
+          "name": "x-input",
+          "description": "A default Tempest component. Possible attributes: `name`, `label`, `type`, `default`.",
+          "attributes": [
+            {
+              "name": "name",
+              "description": "The name of the input field.",
+              "value": {
+                "type": "string",
+                "required": false
+              }
+            },
+            {
+              "name": "label",
+              "description": "The label for the input field.",
+              "value": {
+                "type": "string",
+                "required": false
+              }
+            },
+            {
+              "name": "type",
+              "description": "The type of the input field.",
+              "value": {
+                "type": "string",
+                "required": false
+              }
+            },
+            {
+              "name": "default",
+              "description": "The default value for the input field.",
+              "value": {
+                "type": "string",
+                "required": false
+              }
+            }
+          ]
+        },
+        {
+          "name": "x-icon",
+          "description": "A default Tempest component. Possible attributes: `name`, `class`.",
+          "attributes": [
+            {
+              "name": "name",
+              "description": "The name of the icon.",
+              "value": {
+                "type": "string",
+                "required": true
+              }
+            },
+            {
+              "name": "class",
+              "description": "The class(es) for the icon.",
+              "value": {
+                "type": "string",
+                "required": false
+              }
+            }
+          ]
+        },
+        {
+          "name": "x-vite-tags",
+          "description": "A default Tempest component. Possible attributes: `entrypoint`, `entrypoints`.",
+          "attributes": [
+            {
+              "name": "entrypoint",
+              "description": "The specified entrypoint.",
+              "value": {
+                "type": "string",
+                "required": false
+              }
+            },
+            {
+              "name": "entrypoints",
+              "description": "The specified entrypoints.",
+              "value": {
+                "type": "string",
+                "required": false
+              }
+            }
+          ]
+        }
+      ],
       "attributes": [
         {
           "name": ":if",
