@@ -7,7 +7,7 @@ plugins {
 }
 
 group = "com.luminarix-labs"
-version = "0.0.3"
+version = "0.0.4"
 
 repositories {
     mavenCentral()
