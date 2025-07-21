@@ -34,6 +34,20 @@
         <typedHandler implementation="com.luminarixlabs.tempest.editor.TemplatingTypedHandler"/>
         <!-- Completion contributor for Tempest expression attributes -->
         <completion.contributor language="HTML" implementationClass="com.luminarixlabs.tempest.completion.TempestCompletionContributor"/>
+
+        <!-- Go-to-view -->
+        <psi.referenceContributor
+            language="PHP"
+            implementation="com.luminarixlabs.tempest.goto.ViewReferenceContributor"/>
+
+        <!-- Inspections -->
+        <localInspection
+            language="PHP"
+            groupName="Tempest"
+            displayName="Missing view file"
+            enabledByDefault="true"
+            level="ERROR"
+            implementationClass="com.luminarixlabs.tempest.inspections.MissingViewFileInspection"/>
     </extensions>
     
     <!-- Actions -->
