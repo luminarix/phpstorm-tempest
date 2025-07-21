@@ -5,9 +5,7 @@ import com.intellij.patterns.PlatformPatterns
 import com.intellij.psi.*
 import com.intellij.psi.util.PsiTreeUtil
 import com.intellij.util.ProcessingContext
-import com.jetbrains.php.lang.psi.elements.FunctionReference
-import com.jetbrains.php.lang.psi.elements.PhpNamedElement
-import com.jetbrains.php.lang.psi.elements.StringLiteralExpression
+import com.jetbrains.php.lang.psi.elements.*
 import java.nio.file.Paths
 
 class ViewReferenceContributor : PsiReferenceContributor() {
@@ -52,10 +50,22 @@ class ViewReference(element: StringLiteralExpression, private val viewPath: Stri
     }
 
     override fun multiResolve(incompleteCode: Boolean): Array<ResolveResult> {
+        val parent = element.parent
         val containingFile = element.containingFile
         val containingDir = containingFile.virtualFile.parent
 
-        val path = Paths.get(containingDir.path, viewPath).normalize()
+        val path = if (parent is BinaryExpression &&
+            parent.operation?.text == "." &&
+            parent.rightOperand == element &&
+            parent.leftOperand is ConstantReference &&
+            (parent.leftOperand as ConstantReference).name?.uppercase() == "__DIR__"
+        ) {
+            val relativePath = element.contents.trimStart('/')
+            Paths.get(containingDir.path, relativePath).normalize()
+        } else {
+            Paths.get(containingDir.path, viewPath).normalize()
+        }
+
         val virtualFile = containingDir.fileSystem.findFileByPath(path.toString()) ?: return ResolveResult.EMPTY_ARRAY
 
         val psiFile = PsiManager.getInstance(element.project).findFile(virtualFile) ?: return ResolveResult.EMPTY_ARRAY
