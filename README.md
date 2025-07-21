@@ -17,7 +17,9 @@
             - `:else`
             - `:foreach`
             - `:forelse`
-- Go to view from controllers
+- Go to view functionality (`view('hello-world.view.php')`)
+- Go to view component functionality (`<x-*>`)
+
 *: for example, write `{{`, press space and the plugin will autocomplete the `}}` part.
 
 Download the latest `.jar` release from the [releases page](https://github.com/xHeaven/phpstorm-tempest/releases) (or build it yourself with `gradlew build`) and install it from the disk as shown on the picture below.
