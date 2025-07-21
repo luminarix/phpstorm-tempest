@@ -7,16 +7,17 @@ import com.intellij.openapi.fileEditor.FileEditorManager
 import com.intellij.openapi.project.DumbAware
 import com.luminarixlabs.tempest.settings.TempestSettings
 
-class TempestToggleAction : ToggleAction("Enable Tempest Support", "Enable or disable Tempest syntax highlighting", null), DumbAware {
-    
+class TempestToggleAction :
+    ToggleAction("Enable Tempest Support", "Enable or disable Tempest syntax highlighting", null), DumbAware {
+
     override fun isSelected(e: AnActionEvent): Boolean {
         return TempestSettings.getInstance().isEnabled
     }
-    
+
     override fun setSelected(e: AnActionEvent, state: Boolean) {
         val settings = TempestSettings.getInstance()
         settings.isEnabled = state
-        
+
         // Refresh all open editors to apply/remove highlighting
         e.project?.let { project ->
             ApplicationManager.getApplication().runReadAction {
@@ -33,7 +34,7 @@ class TempestToggleAction : ToggleAction("Enable Tempest Support", "Enable or di
             }
         }
     }
-    
+
     override fun update(e: AnActionEvent) {
         super.update(e)
         e.presentation.text = if (isSelected(e)) {

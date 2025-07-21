@@ -10,13 +10,13 @@ import com.luminarixlabs.tempest.syntax.TempestTokens
 import javax.swing.Icon
 
 class TempestColorSettingsPage : ColorSettingsPage {
-    
+
     override fun getDisplayName(): String = "Tempest"
-    
+
     override fun getIcon(): Icon? = null
-    
+
     override fun getHighlighter(): SyntaxHighlighter = TempestSyntaxHighlighter()
-    
+
     override fun getAttributeDescriptors(): Array<AttributesDescriptor> = arrayOf(
         AttributesDescriptor("Safe Interpolation", TempestTokens.SAFE_INTERPOLATION_KEY),
         AttributesDescriptor("Unsafe Interpolation", TempestTokens.UNSAFE_INTERPOLATION_KEY),
@@ -28,9 +28,9 @@ class TempestColorSettingsPage : ColorSettingsPage {
         AttributesDescriptor("Interpolation Content", TempestTokens.INTERPOLATION_CONTENT_KEY),
         AttributesDescriptor("Braces", TempestTokens.BRACES_KEY)
     )
-    
+
     override fun getColorDescriptors(): Array<ColorDescriptor> = ColorDescriptor.EMPTY_ARRAY
-    
+
     override fun getDemoText(): String = """
         <?php
         
@@ -77,7 +77,7 @@ class TempestColorSettingsPage : ColorSettingsPage {
             }
         }
         """.trimIndent()
-    
+
     override fun getAdditionalHighlightingTagToDescriptorMap(): Map<String, TextAttributesKey> = mapOf(
         "safe" to TempestTokens.SAFE_INTERPOLATION_KEY,
         "unsafe" to TempestTokens.UNSAFE_INTERPOLATION_KEY,

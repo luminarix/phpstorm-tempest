@@ -22,7 +22,8 @@ class ViewReferenceContributor : PsiReferenceContributor() {
 class ViewReferenceProvider : PsiReferenceProvider() {
     override fun getReferencesByElement(element: PsiElement, context: ProcessingContext): Array<PsiReference> {
         val stringLiteral = element as? StringLiteralExpression ?: return PsiReference.EMPTY_ARRAY
-        val functionCall = PsiTreeUtil.getParentOfType(stringLiteral, FunctionReference::class.java) ?: return PsiReference.EMPTY_ARRAY
+        val functionCall =
+            PsiTreeUtil.getParentOfType(stringLiteral, FunctionReference::class.java) ?: return PsiReference.EMPTY_ARRAY
 
         if (functionCall.name?.lowercase() != "view") {
             return PsiReference.EMPTY_ARRAY
@@ -42,7 +43,6 @@ class ViewReferenceProvider : PsiReferenceProvider() {
         return arrayOf(ViewReference(stringLiteral, viewPath))
     }
 }
-
 
 class ViewReference(element: StringLiteralExpression, private val viewPath: String) :
     PsiReferenceBase<StringLiteralExpression>(element, TextRange(1, element.textLength - 1)), PsiPolyVariantReference {
