@@ -26,7 +26,6 @@ class TempestColorSettingsPage : ColorSettingsPage {
         AttributesDescriptor("Conditionals", TempestTokens.CONDITIONAL_KEY),
         AttributesDescriptor("Loops", TempestTokens.LOOP_KEY),
         AttributesDescriptor("Interpolation Content", TempestTokens.INTERPOLATION_CONTENT_KEY),
-        AttributesDescriptor("Braces", TempestTokens.BRACES_KEY)
     )
 
     override fun getColorDescriptors(): Array<ColorDescriptor> = ColorDescriptor.EMPTY_ARRAY
@@ -54,8 +53,8 @@ class TempestColorSettingsPage : ColorSettingsPage {
                         <comment>{{-- User profile component --}}</comment>
                         
                         <conditional>:if</conditional>="<attrval>${'$'}isActive</attrval>">
-                            <h2>Welcome, <safe>{{ ${'$'}name }}</safe>!</h2>
-                            <p>Email: <safe>{{ ${'$'}email }}</safe></p>
+                            <h2>Welcome, <safe_interp>{{ <interp_content>${'$'}name</interp_content> }}</safe_interp>!</h2>
+                            <p>Email: <safe_interp>{{ ${'$'}email }}</safe_interp></p>
                         </div>
                         
                         <div <conditional>:else</conditional>>
@@ -64,8 +63,8 @@ class TempestColorSettingsPage : ColorSettingsPage {
                         
                         <ul>
                             <li <loop>:foreach</loop>="<attrval>${'$'}this->links as ${'$'}link</attrval>">
-                                <a href="<unsafe>{!! ${'$'}link->url !!}</unsafe>">
-                                    <safe>{{ ${'$'}link->title }}</safe>
+                                <a href="<unsafe_interp>{!! ${'$'}link->url !!}</unsafe_interp>">
+                                    {{ ${'$'}link->title }}
                                 </a>
                             </li>
                             <li <loop>:forelse</loop>>
@@ -79,8 +78,9 @@ class TempestColorSettingsPage : ColorSettingsPage {
         """.trimIndent()
 
     override fun getAdditionalHighlightingTagToDescriptorMap(): Map<String, TextAttributesKey> = mapOf(
-        "safe" to TempestTokens.SAFE_INTERPOLATION_KEY,
-        "unsafe" to TempestTokens.UNSAFE_INTERPOLATION_KEY,
+        "safe_interp" to TempestTokens.SAFE_INTERPOLATION_KEY,
+        "unsafe_interp" to TempestTokens.UNSAFE_INTERPOLATION_KEY,
+        "interp_content" to TempestTokens.INTERPOLATION_CONTENT_KEY,
         "comment" to TempestTokens.COMMENT_KEY,
         "attr" to TempestTokens.ATTRIBUTE_NAME_KEY,
         "attrval" to TempestTokens.ATTRIBUTE_VALUE_KEY,

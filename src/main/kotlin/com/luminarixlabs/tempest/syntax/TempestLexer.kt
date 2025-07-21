@@ -32,8 +32,6 @@ class TempestLexer : LexerBase() {
             return
         }
 
-        // For now, let's use a simple approach that doesn't cause issues
-        // The annotator will handle the actual syntax highlighting
         tokenEnd = kotlin.math.min(tokenEnd + 1, endOffset)
         tokenType = null
     }

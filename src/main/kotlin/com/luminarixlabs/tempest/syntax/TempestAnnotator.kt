@@ -10,7 +10,6 @@ import java.util.regex.Pattern
 
 class TempestAnnotator : Annotator {
 
-    // Improved regex patterns for Tempest syntax
     private val safeInterpolationPattern = Pattern.compile("""\{\{\s*([^}]+?)\s*\}\}""")
     private val unsafeInterpolationPattern = Pattern.compile("""\{!!\s*([^}]+?)\s*!!\}""")
     private val commentPattern = Pattern.compile("""\{\{--\s*(.*?)\s*--\}\}""", Pattern.DOTALL)
@@ -19,38 +18,32 @@ class TempestAnnotator : Annotator {
     private val loopPattern = Pattern.compile("""(\s+):(foreach|forelse)(?:\s*=\s*"([^"]*)")?""")
 
     override fun annotate(element: PsiElement, holder: AnnotationHolder) {
-        // Only process if Tempest support is enabled
         if (!TempestSettings.getInstance().isEnabled) {
             return
         }
 
-        // Only process elements in PHP files that might contain Tempest syntax
-        if (!isPhpStringContext(element)) {
+        if (!isTempestViewFile(element)) {
             return
         }
 
         val text = element.text
         if (text.isBlank()) return
 
-        // Track excluded ranges to prevent conflicts
         val excludedRanges = mutableSetOf<IntRange>()
 
-        // Process in order of precedence - comments first to prevent conflicts
         processComments(element, holder, text, excludedRanges)
         processInterpolations(element, holder, text, excludedRanges)
-        processAttributes(element, holder, text, excludedRanges)
         processConditionals(element, holder, text, excludedRanges)
         processLoops(element, holder, text, excludedRanges)
+        processAttributes(element, holder, text, excludedRanges)
     }
 
-    private fun isPhpStringContext(element: PsiElement): Boolean {
-        // Check if we're in a PHP context that might contain Tempest syntax
+    private fun isTempestViewFile(element: PsiElement): Boolean {
         return element.containingFile?.name?.endsWith(".view.php") == true
     }
 
     private fun isRangeExcluded(start: Int, end: Int, excludedRanges: Set<IntRange>): Boolean {
         return excludedRanges.any { excludedRange ->
-            // Check if any part of the range overlaps with excluded ranges
             start < excludedRange.last && end > excludedRange.first
         }
     }
@@ -66,10 +59,8 @@ class TempestAnnotator : Annotator {
             val startOffset = element.textRange.startOffset + matcher.start()
             val endOffset = element.textRange.startOffset + matcher.end()
 
-            // Mark this range as excluded from other processing
             excludedRanges.add(matcher.start() until matcher.end())
 
-            // Highlight the entire comment block with comment color
             createAnnotation(holder, startOffset, endOffset, TempestTokens.COMMENT_KEY, "Tempest comment")
         }
     }
@@ -80,10 +71,8 @@ class TempestAnnotator : Annotator {
         text: String,
         excludedRanges: Set<IntRange>
     ) {
-        // Process safe interpolations {{ }}
         val safeMatcher = safeInterpolationPattern.matcher(text)
         while (safeMatcher.find()) {
-            // Skip if this range is excluded (e.g., inside a comment)
             if (isRangeExcluded(safeMatcher.start(), safeMatcher.end(), excludedRanges)) {
                 continue
             }
@@ -91,7 +80,6 @@ class TempestAnnotator : Annotator {
             val startOffset = element.textRange.startOffset + safeMatcher.start()
             val endOffset = element.textRange.startOffset + safeMatcher.end()
 
-            // Highlight the opening braces
             createAnnotation(
                 holder,
                 startOffset,
@@ -100,7 +88,6 @@ class TempestAnnotator : Annotator {
                 "Safe interpolation start"
             )
 
-            // Highlight the closing braces
             createAnnotation(
                 holder,
                 endOffset - 2,
@@ -109,7 +96,6 @@ class TempestAnnotator : Annotator {
                 "Safe interpolation end"
             )
 
-            // Highlight the content (excluding the braces)
             val contentStart = startOffset + 2
             val contentEnd = endOffset - 2
             if (contentStart < contentEnd) {
@@ -123,10 +109,8 @@ class TempestAnnotator : Annotator {
             }
         }
 
-        // Process unsafe interpolations {!! !!}
         val unsafeMatcher = unsafeInterpolationPattern.matcher(text)
         while (unsafeMatcher.find()) {
-            // Skip if this range is excluded (e.g., inside a comment)
             if (isRangeExcluded(unsafeMatcher.start(), unsafeMatcher.end(), excludedRanges)) {
                 continue
             }
@@ -134,7 +118,6 @@ class TempestAnnotator : Annotator {
             val startOffset = element.textRange.startOffset + unsafeMatcher.start()
             val endOffset = element.textRange.startOffset + unsafeMatcher.end()
 
-            // Highlight the opening braces
             createAnnotation(
                 holder,
                 startOffset,
@@ -143,7 +126,6 @@ class TempestAnnotator : Annotator {
                 "Unsafe interpolation start"
             )
 
-            // Highlight the closing braces
             createAnnotation(
                 holder,
                 endOffset - 3,
@@ -152,7 +134,6 @@ class TempestAnnotator : Annotator {
                 "Unsafe interpolation end"
             )
 
-            // Highlight the content (excluding the braces)
             val contentStart = startOffset + 3
             val contentEnd = endOffset - 3
             if (contentStart < contentEnd) {
@@ -175,20 +156,17 @@ class TempestAnnotator : Annotator {
     ) {
         val matcher = attributePattern.matcher(text)
         while (matcher.find()) {
-            // Skip if this range is excluded
             if (isRangeExcluded(matcher.start(), matcher.end(), excludedRanges)) {
                 continue
             }
 
             val startOffset = element.textRange.startOffset + matcher.start()
-            val attributeStart = startOffset + matcher.group(1).length // Skip whitespace
-            val colonEnd = attributeStart + 1 // Just the colon
+            val attributeStart = startOffset + matcher.group(1).length
+            val colonEnd = attributeStart + 1
             val nameEnd = attributeStart + 1 + matcher.group(2).length
 
-            // Highlight the colon and attribute name
             createAnnotation(holder, colonEnd, nameEnd, TempestTokens.ATTRIBUTE_NAME_KEY, "Tempest attribute")
 
-            // Highlight the value if present
             val value = matcher.group(3)
             if (value != null) {
                 val valueStart =
@@ -214,18 +192,19 @@ class TempestAnnotator : Annotator {
         element: PsiElement,
         holder: AnnotationHolder,
         text: String,
-        excludedRanges: Set<IntRange>
+        excludedRanges: MutableSet<IntRange>
     ) {
         val matcher = conditionalPattern.matcher(text)
         while (matcher.find()) {
-            // Skip if this range is excluded
             if (isRangeExcluded(matcher.start(), matcher.end(), excludedRanges)) {
                 continue
             }
 
             val startOffset = element.textRange.startOffset + matcher.start()
-            val conditionalStart = startOffset + matcher.group(1).length // Skip whitespace
+            val conditionalStart = startOffset + matcher.group(1).length
             val conditionalEnd = conditionalStart + 1 + matcher.group(2).length
+
+            excludedRanges.add(matcher.start() until matcher.end())
 
             createAnnotation(
                 holder,
@@ -235,7 +214,6 @@ class TempestAnnotator : Annotator {
                 "Tempest conditional"
             )
 
-            // Highlight the value if present
             val value = matcher.group(3)
             if (value != null) {
                 val valueStart =
@@ -261,22 +239,22 @@ class TempestAnnotator : Annotator {
         element: PsiElement,
         holder: AnnotationHolder,
         text: String,
-        excludedRanges: Set<IntRange>
+        excludedRanges: MutableSet<IntRange>
     ) {
         val matcher = loopPattern.matcher(text)
         while (matcher.find()) {
-            // Skip if this range is excluded
             if (isRangeExcluded(matcher.start(), matcher.end(), excludedRanges)) {
                 continue
             }
 
             val startOffset = element.textRange.startOffset + matcher.start()
-            val loopStart = startOffset + matcher.group(1).length // Skip whitespace
+            val loopStart = startOffset + matcher.group(1).length
             val loopEnd = loopStart + 1 + matcher.group(2).length
+
+            excludedRanges.add(matcher.start() until matcher.end())
 
             createAnnotation(holder, loopStart, loopEnd, TempestTokens.LOOP_KEY, "Tempest loop")
 
-            // Highlight the value if present
             val value = matcher.group(3)
             if (value != null) {
                 val valueStart =

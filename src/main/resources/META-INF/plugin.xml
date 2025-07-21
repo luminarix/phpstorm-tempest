@@ -7,61 +7,62 @@
         template interpolations, comments, attributes, conditionals, and loops. Features include safe/unsafe
         interpolation highlighting, customizable color schemes, and a toggle to enable/disable the plugin.
     </description>
-    
+
     <!-- Dependencies -->
     <depends>com.intellij.modules.platform</depends>
     <depends>com.jetbrains.php</depends>
-    
+
     <!-- Extensions -->
     <extensions defaultExtensionNs="com.intellij">
         <!-- Services -->
         <applicationService serviceImplementation="com.luminarixlabs.tempest.settings.TempestSettings"/>
-        
+
         <!-- Syntax highlighting -->
         <lang.syntaxHighlighterFactory
-            language="PHP"
-            implementationClass="com.luminarixlabs.tempest.syntax.TempestSyntaxHighlighterFactory"/>
-        
+                language="PHP"
+                implementationClass="com.luminarixlabs.tempest.syntax.TempestSyntaxHighlighterFactory"/>
+
         <!-- Advanced syntax highlighting -->
         <annotator
-            language="PHP"
-            implementationClass="com.luminarixlabs.tempest.syntax.TempestAnnotator"/>
-        
+                language="PHP"
+                implementationClass="com.luminarixlabs.tempest.syntax.TempestAnnotator"/>
+
         <!-- Color settings page -->
         <colorSettingsPage
-            implementation="com.luminarixlabs.tempest.settings.TempestColorSettingsPage"/>
+                implementation="com.luminarixlabs.tempest.settings.TempestColorSettingsPage"/>
         <!-- Typed handler for Tempest templating auto-completion -->
         <typedHandler implementation="com.luminarixlabs.tempest.editor.TemplatingTypedHandler"/>
         <!-- Completion contributor for Tempest expression attributes -->
-        <completion.contributor language="HTML" implementationClass="com.luminarixlabs.tempest.completion.TempestCompletionContributor"/>
+        <completion.contributor language="HTML"
+                                implementationClass="com.luminarixlabs.tempest.completion.TempestCompletionContributor"/>
 
         <!-- Go-to-view -->
         <psi.referenceContributor
-            language="PHP"
-            implementation="com.luminarixlabs.tempest.goto.ViewReferenceContributor"/>
+                language="PHP"
+                implementation="com.luminarixlabs.tempest.goto.ViewReferenceContributor"/>
 
         <!-- Web Types for custom HTML attributes -->
         <webSymbols.webTypes
-            source="web-types/tempest.web-types.json"
-            enableByDefault="true"/>
+                source="web-types/tempest.web-types.json"
+                enableByDefault="true"/>
 
         <!-- Inspections -->
         <localInspection
-            language="PHP"
-            groupName="Tempest"
-            displayName="Missing view file"
-            enabledByDefault="true"
-            level="ERROR"
-            implementationClass="com.luminarixlabs.tempest.inspections.MissingViewFileInspection"/>
+                language="PHP"
+                groupName="Tempest"
+                displayName="Missing view file"
+                enabledByDefault="true"
+                level="ERROR"
+                implementationClass="com.luminarixlabs.tempest.inspections.MissingViewFileInspection"/>
     </extensions>
-    
+
     <!-- Actions -->
     <actions>
         <action
-            id="com.luminarixlabs.tempest.actions.TempestToggleAction"
-            class="com.luminarixlabs.tempest.actions.TempestToggleAction"
-            text="Toggle Tempest Support"
-            description="Enable or disable Tempest syntax highlighting">
+                id="com.luminarixlabs.tempest.actions.TempestToggleAction"
+                class="com.luminarixlabs.tempest.actions.TempestToggleAction"
+                text="Toggle Tempest Support"
+                description="Enable or disable Tempest syntax highlighting">
             <add-to-group group-id="ToolsMenu" anchor="last"/>
         </action>
     </actions>
