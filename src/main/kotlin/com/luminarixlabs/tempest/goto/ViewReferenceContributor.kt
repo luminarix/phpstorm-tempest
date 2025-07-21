@@ -6,6 +6,7 @@ import com.intellij.psi.*
 import com.intellij.psi.util.PsiTreeUtil
 import com.intellij.util.ProcessingContext
 import com.jetbrains.php.lang.psi.elements.FunctionReference
+import com.jetbrains.php.lang.psi.elements.PhpNamedElement
 import com.jetbrains.php.lang.psi.elements.StringLiteralExpression
 import java.nio.file.Paths
 
@@ -27,6 +28,12 @@ class ViewReferenceProvider : PsiReferenceProvider() {
             return PsiReference.EMPTY_ARRAY
         }
 
+        val resolvedFunction = functionCall.resolve()
+
+        if ((resolvedFunction as? PhpNamedElement)?.fqn != "\\Tempest\\view") {
+            return PsiReference.EMPTY_ARRAY
+        }
+
         val viewPath = stringLiteral.contents
         if (viewPath.isEmpty()) {
             return PsiReference.EMPTY_ARRAY
@@ -35,6 +42,7 @@ class ViewReferenceProvider : PsiReferenceProvider() {
         return arrayOf(ViewReference(stringLiteral, viewPath))
     }
 }
+
 
 class ViewReference(element: StringLiteralExpression, private val viewPath: String) :
     PsiReferenceBase<StringLiteralExpression>(element, TextRange(1, element.textLength - 1)), PsiPolyVariantReference {
