@@ -1,0 +1,55 @@
+{
+  "$schema": "https://raw.githubusercontent.com/JetBrains/web-types/master/schema/web-types.json",
+  "name": "tempest",
+  "version": "1.0.0",
+  "description-markup": "markdown",
+  "contributions": {
+    "html": {
+      "attributes": [
+        {
+          "name": ":if",
+          "description": "Tempest conditional attribute - renders element if condition is true",
+          "doc-url": "https://tempestphp.com/docs/templating",
+          "value": {
+            "type": "string",
+            "required": true
+          }
+        },
+        {
+          "name": ":elseif",
+          "description": "Tempest conditional attribute - renders element if previous conditions are false and this condition is true",
+          "doc-url": "https://tempestphp.com/docs/templating",
+          "value": {
+            "type": "string",
+            "required": true
+          }
+        },
+        {
+          "name": ":else",
+          "description": "Tempest conditional attribute - renders element if all previous conditions are false",
+          "doc-url": "https://tempestphp.com/docs/templating",
+          "value": {
+            "kind": "no-value"
+          }
+        },
+        {
+          "name": ":foreach",
+          "description": "Tempest loop attribute - iterates over a collection",
+          "doc-url": "https://tempestphp.com/docs/templating",
+          "value": {
+            "type": "string",
+            "required": true
+          }
+        },
+        {
+          "name": ":forelse",
+          "description": "Tempest loop fallback attribute - renders element if foreach collection is empty",
+          "doc-url": "https://tempestphp.com/docs/templating",
+          "value": {
+            "kind": "no-value"
+          }
+        }
+      ]
+    }
+  }
+}

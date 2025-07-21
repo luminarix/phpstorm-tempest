@@ -40,6 +40,11 @@
             language="PHP"
             implementation="com.luminarixlabs.tempest.goto.ViewReferenceContributor"/>
 
+        <!-- Web Types for custom HTML attributes -->
+        <webSymbols.webTypes
+            source="web-types/tempest.web-types.json"
+            enableByDefault="true"/>
+
         <!-- Inspections -->
         <localInspection
             language="PHP"
